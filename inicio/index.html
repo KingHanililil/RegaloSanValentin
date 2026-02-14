@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Un Regalo Para Ti ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💝</text></svg>">
+</head>
+<body>
+    <!-- Audio de fondo -->
+    <audio id="bgAudio" muted autoplay loop>
+        <source src="../music/Snowman.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="bgCanvas"></canvas>
+    
+    <div class="container">
+        <div class="content">
+            <h1 class="title">Tengo un regalo para ti</h1>
+            <p class="subtitle">Haz clic en el botón para descubrirlo</p>
+            
+            <a href="../my-wife/index.html" class="magic-button" onclick="saveAudioTime()">
+                <span class="button-text">Abre tu regalo</span>
+                <span class="button-glow"></span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Guardar el tiempo actual del audio al navegar
+        function saveAudioTime() {
+            const audio = document.getElementById('bgAudio');
+            if (audio) {
+                sessionStorage.setItem('audioTime', audio.currentTime);
+            }
+        }
+
+        // Restaurar tiempo del audio si viene de otra página
+        window.addEventListener('load', () => {
+            const audio = document.getElementById('bgAudio');
+            const savedTime = sessionStorage.getItem('audioTime');
+            if (savedTime && audio) {
+                audio.currentTime = parseFloat(savedTime);
+            }
+        });
+
+        // Intentar desmutar automáticamente
+        setTimeout(() => {
+            const audio = document.getElementById('bgAudio');
+            if (audio) {
+                audio.muted = false;
+                audio.play().catch(err => {
+                    // Si falla, hacer clic en el botón para intentar después
+                    console.log('Autoplay requiere interacción del usuario');
+                });
+            }
+        }, 100);
+
+        // Permitir desmutar con interacción del usuario como respaldo
+        function enableAudio() {
+            const audio = document.getElementById('bgAudio');
+            if (audio) {
+                audio.muted = false;
+                audio.play().catch(err => console.log('Error al reproducir:', err));
+            }
+            document.removeEventListener('click', enableAudio);
+            document.removeEventListener('touchstart', enableAudio);
+        }
+
+        document.addEventListener('click', enableAudio);
+        document.addEventListener('touchstart', enableAudio);
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
